@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    					http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    					http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+	<context:annotation-config />
+	<context:component-scan base-package="com.intertecintl" />
+	
+	<bean name="enumValue" abstract="true"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetMethod" value="getValue" />
+	</bean>
+	
+	<bean id="appConfigPath" parent="enumValue">
+		<property name="targetObject">
+			<util:constant
+				static-field="com.intertecintl.usernamelist.commons.constants.AppConstants.APP_CONFIG_PATH" />
+		</property>
+	</bean>
+	
+	<bean id="appConfigFileName" parent="enumValue">
+		<property name="targetObject">
+			<util:constant
+				static-field="com.intertecintl.usernamelist.commons.constants.AppConstants.APP_CONFIG_FILE_NAME" />
+		</property>
+	</bean>
+	
+	<bean id="loadUtils"
+		class="com.intertecintl.usernamelist.commons.utils.LoadConfigurationUtils" />
+	
+	<bean id="initAppListener"
+		class="com.intertecintl.usernamelist.core.listeners.InitAppListener">
+		<constructor-arg name="loadUtils" ref="loadUtils" />
+	</bean>
+	
+	<bean id="usernameListManager"
+		class="com.intertecintl.usernamelist.core.managers.UsernameListManager" />
+</beans>
